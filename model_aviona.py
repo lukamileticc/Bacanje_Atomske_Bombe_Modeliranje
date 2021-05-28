@@ -2,51 +2,103 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
+R = 4700
+visina = 9600
+g = 9.81
+v_max = 147.22
+vt = 350
+h = visina
 
-a = 3000
-b = 5000
-r = 4700/2
-D = 6513
+# Iz modela bombe
+tp = math.sqrt(2 * visina / g)
+D = v_max * tp
+print (f'Domet: {D} m') 
 
-fig, ax = plt.subplots()
-ax.plot([0,a], [b-r,b-r], color='b')
+alfa = 2 * math.atan(R / D)
 
-ax.plot([a,a+D], [b-r,b-r], linestyle='--', color='g')
+luk_OK = R * (math.pi - alfa)
+print(f'Duzina luka: {luk_OK} m')
 
-xr = np.linspace(a, a+r , 100)
-yr1 = list()
-yr2 = list()
+t1 = R * (math.pi - alfa) / v_max
 
-for x in xr:
-    yr1.append(b - math.sqrt(r**2 - (x-a)**2)) 
-    yr2.append(b + math.sqrt(r**2 - (x-a)**2)) 
+print(f'Trajanje skretanja: {t1} s')
 
-ax.plot(xr, yr1, color='b', linestyle='--')
-ax.plot(xr, yr2, color='b', linestyle='--')
+a = v_max**2 - vt**2
+b = 2*D*v_max - 2*t1*vt**2 + 2*vt*tp
+#c = D**2 + h**2 - vt**2 + t1**2 -vt**2*tp**2 - 2*vt*t1*tp
+c = D**2 + h**2 - vt**2 * (t1**2 - 2*tp**2 - 2*t1*tp)
 
-# t1
+#t21 = (-b + math.sqrt(b**2 - 4*a*c)) / (2*a)
+t2 = (-b - math.sqrt(b**2 - 4*a*c)) / (2*a)
 
-x1 = a + 2000
-y1 = b+r - math.sqrt(r**2 - (x1-a)**2)
+print(f'Posle skretanja: {t2} s')
 
-xt1 = [x1, a+5000]
-yt1 = [
-    b - (r**2 - (x1 - a)*(xt1[0] - a))/(y1-b),
-    b - (r**2 - (x1 - a)*(xt1[1] - a))/(y1-b)
-]
+print(f'Talas udara u avion u trenutku : {t1 + t2} s')
 
-ax.plot(xt1, yt1, color='g')
+def grafik():
 
-# t2
-x2 = a + 2000
-y2 = b+r - math.sqrt(r**2 - (x2-a)**2)
+	fig, ax = plt.subplots()
+	ax.plot([-8000,0], [-R,-R], color='b')
 
-xt2 = [x2, a-600]
-yt2 = [
-    b + (r**2 - (x2 - a)*(xt2[0] - a))/(y2-b) - 10,
-    b + (r**2 - (x2 - a)*(xt2[1] - a))/(y2-b) +20
-]
+	ax.plot([0,D], [-R,-R], linestyle='--', color='g')
 
-ax.plot(xt2, yt2, color='g')
+	# Radijus okreta
 
-plt.show()
+	fi = math.pi/2 - alfa
+	tacke = np.linspace(-math.pi/2, fi , 100)
+	xr = list()
+	yr = list()
+
+	for x in tacke:
+		xr.append(math.cos(x)*R)
+		yr.append(math.sin(x)*R)
+	    
+	
+	ax.plot(xr, yr, color='b')
+	
+	tacke = np.linspace(fi, math.pi/2, 100)
+	xr = list()
+	yr = list()
+
+	for x in tacke:
+		xr.append(math.cos(x)*R)
+		yr.append(math.sin(x)*R)
+	    
+	
+	ax.plot(xr, yr, color='b', linestyle='--')
+
+	# Tangenta PK
+
+	kx = D + math.cos(math.pi-alfa)*D
+	ky = math.sin(math.pi-alfa)*D -R
+
+	x1 = [kx, D]
+	y1 = [ky, -R]
+	ax.plot(x1, y1, linestyle='--', color='g')
+	
+	# Putanja aviona
+	
+	put = t2 * v_max
+	
+	Ax = kx + math.cos(math.pi-alfa) * put
+	Ay = ky + math.sin(math.pi-alfa) * put
+	
+	
+	x1 = [kx, Ax]
+	y1 = [ky, Ay]
+	ax.plot(x1, y1, color='b')
+	
+	
+	tacke_x = [0, D, kx, Ax]
+	tacke_y = [-R, -R, ky, Ay]
+	ax.plot(tacke_x, tacke_y, 'ro')
+	
+	ax.text(0, -R + 300, ' t0')
+	ax.text(D, -R, '  E')
+	ax.text(kx, ky, '  t1')
+	ax.text(Ax, Ay, '  t2')
+	
+	plt.show()
+	
+	
+grafik()
