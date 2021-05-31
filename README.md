@@ -1,4 +1,4 @@
-# Bacanje_Atomske_bombe_modeliranje
+# Bacanje_Atomske_bombe_modeliranje :memo: 
 Seminarski rad iz kursa Osnovi Matematickog modeliranja
 
 ## Opis problema: :dart:
