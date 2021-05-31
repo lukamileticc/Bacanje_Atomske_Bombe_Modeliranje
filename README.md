@@ -17,4 +17,4 @@ optimalnom putanјom koјa maksimizuјe tu dalјinu.
 
 - [Maja Crnomarkovic](https://github.com/crnomarkovicm)
 - [Predrag Mitic](https://github.com/PredragMitic) 
-- [Luka Miletić, 91/2017](https://gitlab.com/lukamileticc) 
+- [Luka Miletic](https://gitlab.com/lukamileticc) 
